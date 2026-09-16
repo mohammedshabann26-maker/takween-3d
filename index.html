@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>تكوين — المقر الرقمي | عالم افتراضي تفاعلي</title>
-<meta name="description" content="تكوين: مقر تقني افتراضي ثلاثي الأبعاد — تجوّل داخل مبنى تكوين، اكتشف أنظمة الويب والتطبيقات والألعاب، وجرّب المشاريع الحقيقية داخل معرض 3D تفاعلي.">
+<title>تكوين - المقر الرقمي | عالم افتراضي تفاعلي</title>
+<meta name="description" content="تكوين: مقر تقني افتراضي ثلاثي الأبعاد - تجوّل داخل مبنى تكوين، اكتشف أنظمة الويب والتطبيقات والألعاب، وجرّب المشاريع الحقيقية داخل معرض 3D تفاعلي.">
 <meta name="theme-color" content="#04100c">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1f1a'/%3E%3Cpath d='M16 5l2.9 8.1L27 16l-8.1 2.9L16 27l-2.9-8.1L5 16l8.1-2.9z' fill='%2312a87a'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23e0a12a'/%3E%3C/svg%3E">
 <!--
   design-brief (internal trace)
   Purpose   : 让「تكوين」从一张普通落地页变成可进入的虚拟科技公司总部（Web 交付，RTL 阿拉伯语）
-  Tone      : 电影感 / 建筑感 / 深绿+金 —— 克制的高密度，不是霓虹堆料
+  Tone      : 电影感 / 建筑感 / 深绿+金 -- 克制的高密度，不是霓虹堆料
   Constraints: 单文件自包含 · 无外部资源 · 60fps 优先（程序化几何，无重型模型）· 移动端降级 · 尊重 prefers-reduced-motion
   Difference: 进入即电影开场（3D 标志环绕），随后走入真实 HQ；项目以「3D 装置 + 实时屏幕」出现，可走近并直接试玩
   Redesign mode: Full Redesign（保留品牌身份/内容/项目链接）
@@ -198,7 +198,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
 <div id="cine" class="cine" aria-hidden="true">
   <div class="cine-title">
     <h1>تكوين</h1>
-    <p>مقر تقني افتراضي — أنظمة · تطبيقات · ألعاب · مشاريع</p>
+    <p>مقر تقني افتراضي - أنظمة · تطبيقات · ألعاب · مشاريع</p>
   </div>
   <div class="cine-ui">
     <span class="cine-line" id="cineLine">دخول <b>المقر الرقمي</b></span>
@@ -212,7 +212,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
 <!-- ============ الواجهة العلوية ============ -->
 <header class="hud" id="hud">
   <div class="wrap hud-in">
-    <a class="brand" href="#station-entry" aria-label="تكوين — المقر الرقمي">
+    <a class="brand" href="#station-entry" aria-label="تكوين - المقر الرقمي">
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3l3.4 9.6L29 16l-9.6 3.4L16 29l-3.4-9.6L3 16l9.6-3.4z"/></svg></span>
       <span>تكوين<em>TAKWEEN</em></span>
     </a>
@@ -222,7 +222,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
     </div>
     <div class="hud-actions">
       <a class="btn btn-ghost btn-sm" href="#station-projects">معرض المشاريع</a>
-      <a class="btn btn-primary btn-sm" href="#station-contact">ابدأ مشروعًا</a>
+      <a class="btn btn-primary btn-sm" href="#station-contact">تواصل معنا</a>
       <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -230,7 +230,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
 
 <nav class="rail" id="rail" aria-label="مناطق المقر"></nav>
 <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
-<div class="prog-txt" aria-hidden="true"><span id="progTxt">0%</span> · مرّر للتحرك داخل المقر</div>
+<div class="prog-txt" aria-hidden="true"><span id="zoneInline">الاستقبال</span><span style="opacity:.5">·</span><span id="progTxt">0%</span></div>
 
 <!-- ============ طبقة الأجهزة ثلاثية الأبعاد ============ -->
 <div class="devices" id="devices">
@@ -243,7 +243,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
       </div>
       <div class="device-screen">
         <div class="screen-load">جارٍ تشغيل الديمو…</div>
-        <iframe data-src="https://mohammedshabann26-maker.github.io/city-shop/" title="ديمو تفاعلي — City Shop" loading="lazy" referrerpolicy="no-referrer" tabindex="-1"></iframe>
+        <iframe data-src="https://mohammedshabann26-maker.github.io/city-shop/" title="ديمو تفاعلي - City Shop" loading="lazy" referrerpolicy="no-referrer" tabindex="-1"></iframe>
       </div>
       <div class="device-foot">
         <div class="df-meta"><b>City Shop</b><span>منصة إدارة المطاعم والمتاجر</span></div>
@@ -266,7 +266,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
       </div>
       <div class="device-screen">
         <div class="screen-load">جارٍ تشغيل الديمو…</div>
-        <iframe data-src="https://mohammedshabann26-maker.github.io/sabratha-fuel-queue/" title="ديمو تفاعلي — فل تنك صبراتة" loading="lazy" referrerpolicy="no-referrer" tabindex="-1"></iframe>
+        <iframe data-src="https://mohammedshabann26-maker.github.io/sabratha-fuel-queue/" title="ديمو تفاعلي - فل تنك صبراتة" loading="lazy" referrerpolicy="no-referrer" tabindex="-1"></iframe>
       </div>
       <div class="device-foot">
         <div class="df-meta"><b>فل تنك صبراتة</b><span>نظام طوابير تعبئة الوقود</span></div>
@@ -291,16 +291,16 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
       <div class="panel reveal">
         <span class="tag sys"><i></i> المبنى الرئيسي · الطابق الأرضي</span>
         <h1>مرحبًا بك في <span class="g">مقر تكوين</span></h1>
-        <p class="lede">هذا ليس موقعًا تقرأه — هذا مبنى تتجوّل داخله. ستتحرك الكاميرا معك عبر أقسام المقر: أنظمة الويب، التطبيقات، الألعاب، ثم معرض المشاريع حيث تجرّب أنظمتنا الحقيقية بيدك.</p>
+        <p class="lede">هذا ليس موقعًا تقرأه - هذا مبنى تتجوّل داخله. ستتحرك الكاميرا معك عبر أقسام المقر: أنظمة الويب، التطبيقات، الألعاب، ثم معرض المشاريع حيث تجرّب أنظمتنا الحقيقية بيدك.</p>
         <div class="mini">
-          <span>المشاريع المعروضة <b>٢</b> — تعمل الآن</span>
+          <span>المشاريع المعروضة <b>٢</b> وتعمل الآن</span>
           <span>المناطق <b>٤</b></span>
-          <span>التنقل <b>بالتمرير</b></span>
+          <span>التنقّل داخل المقر</span>
         </div>
         <div class="acts">
           <a class="btn btn-primary" href="#station-projects">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M9 10l6 3-6 3z"/></svg>
-            ادخل معرض المشاريع
+            معرض المشاريع
           </a>
           <a class="btn btn-ghost" href="#station-systems">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 8l7-5 7 5"/></svg>
@@ -315,17 +315,17 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
   <section class="station" id="station-systems" data-zone-label="أنظمة الويب" data-station="1">
     <div class="wrap">
       <div class="panel right reveal">
-        <span class="tag sys"><i></i> المنطقة 01 · أنظمة الويب</span>
+        
         <h2>أنظمة تحمل عملًا حقيقيًا</h2>
         <p class="lede">لوحات تحكم، قواعد بيانات، صلاحيات، تقارير. نبني النظام كاملًا: من الشاشة التي يستخدمها فريقك، إلى الجداول التي تحفظ بياناتك بأمان.</p>
-        <div class="grid three">
+        <div class="grid mix">
           <div class="card">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1.6"/><rect x="3" y="14" width="18" height="6" rx="1.6"/><path d="M7 7h.01M7 17h.01"/></svg></span>
             <h3>لوحات تحكم</h3><p>إدارة كاملة للمخزون والفواتير والعملاء من مكان واحد.</p>
           </div>
           <div class="card">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16M6 19V9m4 10V5m4 14v-7m4 7V8"/></svg></span>
-            <h3>تقارير وقياس</h3><p>أرقامك أمامك: مبيعات، حركة، أداء — بلا حسابات يدوية.</p>
+            <h3>تقارير وقياس</h3><p>أرقامك أمامك: مبيعات، حركة، أداء - بلا حسابات يدوية.</p>
           </div>
           <div class="card">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V6z"/><path d="M9.5 12.5l2 2 3.5-4"/></svg></span>
@@ -340,10 +340,10 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
   <section class="station" id="station-apps" data-zone-label="التطبيقات" data-station="2">
     <div class="wrap">
       <div class="panel reveal">
-        <span class="tag app"><i></i> المنطقة 02 · التطبيقات</span>
+        
         <h2>تطبيقات تعمل من الجيب</h2>
-        <p class="lede">واجهات عربية مريحة على الجوال والتابلت والحاسوب: نظام حجز، متابعة طلبات، إشعارات — بتجربة واحدة متسقة في كل الشاشات.</p>
-        <div class="grid three">
+        <p class="lede">واجهات عربية مريحة على الجوال والتابلت والحاسوب: نظام حجز، متابعة طلبات، إشعارات - بتجربة واحدة متسقة في كل الشاشات.</p>
+        <div class="grid mix">
           <div class="card">
             <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M11 18.5h2"/></svg></span>
             <h3>نظام حجز مواعيد</h3><p>العميل يحجز بنفسه، والنظام يذكّره قبل الموعد.</p>
@@ -365,10 +365,10 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
   <section class="station" id="station-games" data-zone-label="الألعاب" data-station="3">
     <div class="wrap">
       <div class="panel right reveal">
-        <span class="tag game"><i></i> المنطقة 03 · الألعاب والتجارب</span>
+        
         <h2>ألعاب وتجارب تفاعلية</h2>
         <p class="lede">نبني ألعاب المتصفح والتجارب التفاعلية بنفس هندسة الأداء: تحميل خفيف، حركة سلسة على الجوال، ومتعة من أول ثانية.</p>
-        <div class="grid three">
+        <div class="grid mix">
           <div class="card">
             <span class="ico gd" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 8.5h9a5.5 5.5 0 0 1 0 11h-9a5.5 5.5 0 0 1 0-11z"/><path d="M9.5 12v3M12 11v4M14.5 12v3"/></svg></span>
             <h3>ألعاب المتصفح</h3><p>تعمل بضغطة واحدة دون تحميل أو تسجيل.</p>
@@ -390,7 +390,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
   <section class="station gallery" id="station-projects" data-zone-label="معرض المشاريع" data-station="4">
     <div class="wrap">
       <div class="panel reveal">
-        <span class="tag proj"><i></i> المنطقة 04 · معرض المشاريع</span>
+        <span class="tag proj"><i></i> المعرض</span>
         <h2>اقترب… وشغّل الديمو بيدك</h2>
         <p class="lede">أمامك الآن جهازان حقيقيان داخل المعرض. اضغط <b>«شغّل الديمو»</b> لتتحكم بالنظام مباشرة داخل شاشة الجهاز، أو افتحه بحجم كامل في نافذة جديدة.</p>
         <div class="mini">
@@ -399,7 +399,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
         <div class="grid two">
           <div class="card">
             <h3>City Shop</h3>
-            <p>منصة إدارة المطاعم والمتاجر: نقاط بيع، مخزون، فواتير وتقارير — بواجهة عربية كاملة.</p>
+            <p>منصة إدارة المطاعم والمتاجر: نقاط بيع، مخزون، فواتير وتقارير - بواجهة عربية كاملة.</p>
             <div class="acts">
               <a class="btn btn-ghost btn-sm" href="https://mohammedshabann26-maker.github.io/city-shop/" target="_blank" rel="noopener">فتح المشروع</a>
             </div>
@@ -420,7 +420,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
   <section class="station" id="station-contact" data-zone-label="بوابة الخروج" data-station="5">
     <div class="wrap">
       <div class="panel right reveal">
-        <span class="tag proj"><i></i> بوابة الخروج · نفكّر معك</span>
+        
         <h2>اكتب فكرتك… نرتّبها لك</h2>
         <p class="lede">اكتب فكرتك أو مشكلتك كما تحب، وسيحوّلها المُنظّم إلى: هدف واضح، ميزات مقترحة، خطوات تنفيذ، ونقاط تحتاج قرارًا.</p>
         <label class="sr" for="ideaIn">فكرتك</label>
@@ -434,7 +434,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
           <!-- TODO: ضع رقم واتسابك هنا -->
           <a class="btn btn-primary" href="https://wa.me/000000000000" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 12 20a8 8 0 0 1-4-1z"/><path d="M9 10.5c0 2.5 2 4.5 4.5 4.5"/></svg>
-            تواصل عبر واتساب
+            تواصل معنا
           </a>
         </div>
         <div id="orgOut" class="org-out" aria-live="polite"></div>
@@ -450,7 +450,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3l3.4 9.6L29 16l-9.6 3.4L16 29l-3.4-9.6L3 16l9.6-3.4z"/></svg></span>
       <span>تكوين<em>TAKWEEN</em></span>
     </div>
-    <p class="foot-note">عالم افتراضي تفاعلي — تجربة معاينة مستقلة. المشاريع المعروضة أنظمة حقيقية تعمل بالفعل.</p>
+    <p class="foot-note">عالم افتراضي تفاعلي - تجربة معاينة مستقلة. المشاريع المعروضة أنظمة حقيقية تعمل بالفعل.</p>
     <div class="foot-links">
       <a href="https://mohammedshabann26-maker.github.io/nova-studio/" target="_blank" rel="noopener">الموقع الرئيسي</a>
       <a href="https://mohammedshabann26-maker.github.io/city-shop/" target="_blank" rel="noopener">City Shop</a>
@@ -517,6 +517,8 @@ textarea#ideaIn::placeholder{color:var(--faint)}
 .foot-links a:hover{color:var(--brand-3)}
 
 .station.gallery{align-items:flex-end;padding-bottom:74px}
+.grid.mix{grid-template-columns:1fr 1fr}
+.grid.mix>*:first-child{grid-column:1 / -1}
 
 /* قائمة الجوال المنسدلة */
 .zdrop{position:fixed;top:78px;inset-inline:14px;z-index:70;background:rgba(5,18,14,.97);
@@ -533,7 +535,8 @@ textarea#ideaIn::placeholder{color:var(--faint)}
 @media (max-width:900px){
   .rail{display:none}
   .device{display:none}            /* على الجوال: الأجهزة تُستبدل ببطاقات المشاريع النصية */
-  .grid.three,.grid.two{grid-template-columns:1fr}
+  .grid.three,.grid.two,.grid.mix{grid-template-columns:1fr}
+  .grid.mix>*:first-child{grid-column:auto}
   .panel{max-width:none}
   .station{min-height:auto;padding:96px 0 72px}
   .station.gallery{align-items:flex-start}
@@ -602,6 +605,7 @@ if('IntersectionObserver' in window){
     var i=stations.indexOf(en.target); if(i<0)return;
     railBtns.forEach(function(b,k){b.classList.toggle('on',k===i);});
     zoneName.textContent=en.target.getAttribute('data-zone-label');
+    var zi=$('#zoneInline'); if(zi) zi.textContent=en.target.getAttribute('data-zone-label');
   });},{rootMargin:'-45% 0px -50% 0px'});
   stations.forEach(function(s){io.observe(s);});
   var ioR=new IntersectionObserver(function(es){es.forEach(function(en){
@@ -625,7 +629,7 @@ function card(icon,title,items,gold){
 var ideaIn=$('#ideaIn'),orgOut=$('#orgOut');
 $('#orgBtn').addEventListener('click',function(){
   var t=(ideaIn.value||'').trim();
-  if(t.length<10){orgOut.innerHTML=card(IC.pen,'اكتب فكرتك أولًا',['اكتب سطرين على الأقل عن نشاطك والمشكلة التي تريد حلها — مثال: «عندي محل ملابس وأريد نظام يتابع المخزون ويصدر تقارير».'],false);return;}
+  if(t.length<10){orgOut.innerHTML=card(IC.pen,'اكتب فكرتك أولًا',['اكتب سطرين على الأقل عن نشاطك والمشكلة التي تريد حلها - مثال: «عندي محل ملابس وأريد نظام يتابع المخزون ويصدر تقارير».'],false);return;}
   var ss=sents(t),goal=ss[0]||t,feats=[],decs=[];
   ss.forEach(function(s){
     if(FEAT.some(function(k){return s.indexOf(k)>-1;}))feats.push(s);
