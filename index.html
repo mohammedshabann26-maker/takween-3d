@@ -19,7 +19,7 @@
 <style>
 :root{
   --void:#030b09; --bg:#04100c; --bg-2:#071712; --bg-3:#0a1f19;
-  --ink:#eaf5f0; --muted:#9dbdb2; --faint:#6d8b81;
+  --ink:#eaf5f0; --muted:#9dbdb2; --faint:#7c9a90;
   --line:rgba(255,255,255,.075); --line-2:rgba(255,255,255,.14);
   --brand:#0e8f66; --brand-2:#12a87a; --brand-3:#4fd1a5;
   --gold:#e0a12a; --gold-2:#f0c460;
@@ -233,7 +233,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
 <div class="prog-txt" aria-hidden="true"><span id="progTxt">0%</span> · مرّر للتحرك داخل المقر</div>
 
 <!-- ============ طبقة الأجهزة ثلاثية الأبعاد ============ -->
-<div class="devices" id="devices" aria-hidden="false">
+<div class="devices" id="devices">
 
   <article class="device" data-zone="zone-projects" data-anchor="dev-city">
     <div class="device-frame">
@@ -489,7 +489,7 @@ p.lede{color:var(--muted);font-size:clamp(15px,1.5vw,17.5px);line-height:1.95}
   background:rgba(0,0,0,.22)}
 .df-meta{display:flex;flex-direction:column;line-height:1.35}
 .df-meta b{font-size:13px;font-weight:800}
-.df-meta span{font-size:10.5px;color:var(--faint)}
+.df-meta span{font-size:11px;color:var(--muted)}
 .df-acts{display:flex;gap:8px;margin-inline-start:auto;flex-wrap:wrap}
 
 /* ================= منظّم الأفكار ================= */
@@ -516,6 +516,16 @@ textarea#ideaIn::placeholder{color:var(--faint)}
 .foot-links a{color:var(--muted);font-size:13px;transition:color .25s}
 .foot-links a:hover{color:var(--brand-3)}
 
+.station.gallery{align-items:flex-end;padding-bottom:74px}
+
+/* قائمة الجوال المنسدلة */
+.zdrop{position:fixed;top:78px;inset-inline:14px;z-index:70;background:rgba(5,18,14,.97);
+  border:1px solid var(--line);border-radius:16px;padding:10px;display:grid;gap:4px;
+  box-shadow:0 30px 70px rgba(0,0,0,.6);backdrop-filter:blur(16px)}
+.zdrop button{background:transparent;border:0;color:var(--muted);font-family:inherit;font-size:15px;
+  text-align:start;padding:13px 14px;border-radius:11px;cursor:pointer;min-height:46px;transition:.22s}
+.zdrop button:hover{background:rgba(18,168,122,.12);color:var(--ink)}
+
 /* ================= التجاوب ================= */
 @media (max-width:1100px){
   .grid.three{grid-template-columns:1fr 1fr}
@@ -532,6 +542,8 @@ textarea#ideaIn::placeholder{color:var(--faint)}
   .hud-zone{display:none}
   .menu-btn{display:inline-flex}
   .hud-actions .btn{display:none}
+  .btn{min-height:44px}
+  .zdrop{top:74px}
 }
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none;transition:none}
@@ -539,7 +551,7 @@ textarea#ideaIn::placeholder{color:var(--faint)}
   .o-card{animation:none}
   .card:hover{transform:none}
 }
-.station.gallery{align-items:flex-end;padding-bottom:74px}
+.no-webgl .cine{display:none}
 </style>
 
 <script>
@@ -568,7 +580,7 @@ var zoneName=$('#zoneName'),rail=$('#rail'),railBtns=[];
 stations.forEach(function(st){
   var b=document.createElement('button');b.type='button';b.setAttribute('data-label',st.getAttribute('data-zone-label'));
   b.setAttribute('aria-label','الانتقال إلى '+st.getAttribute('data-zone-label'));
-  b.addEventListener('click',function(){window.scrollTo({top:st.offsetTop,behavior:reduce?'auto':'smooth'});});
+  b.addEventListener('click',function(){window.scrollTo({top:Math.max(0,st.offsetTop-70),behavior:reduce?'auto':'smooth'});});
   rail.appendChild(b);railBtns.push(b);
 });
 var hud=$('#hud');
@@ -579,7 +591,7 @@ menuBtn.addEventListener('click',function(){
   if(on){
     var d=document.createElement('div');d.className='zdrop';d.id='zdrop';
     stations.forEach(function(st){var a=document.createElement('button');a.type='button';a.textContent=st.getAttribute('data-zone-label');
-      a.addEventListener('click',function(){window.scrollTo({top:st.offsetTop,behavior:'smooth'});d.remove();menuBtn.classList.remove('on');});
+      a.addEventListener('click',function(){window.scrollTo({top:Math.max(0,st.offsetTop-70),behavior:'smooth'});d.remove();menuBtn.classList.remove('on');});
       d.appendChild(a);});
     document.body.appendChild(d);
   } else { var e=$('#zdrop'); if(e) e.remove(); }
@@ -630,7 +642,7 @@ $('#orgClear').addEventListener('click',function(){ideaIn.value='';orgOut.innerH
 /* ================= محرك العالم ================= */
 var cv=$('#gl');
 var gl=cv.getContext('webgl',{antialias:false,alpha:false,powerPreference:'high-performance'})||cv.getContext('experimental-webgl');
-if(!gl){html.classList.add('no-webgl');lockScroll(false);return;}
+if(!gl){html.classList.add('no-webgl');var ce=$('#cine');if(ce)ce.classList.add('done');lockScroll(false);return;}
 
 function persp(o,f,a,n,fr){var t=1/Math.tan(f/2),nf=1/(n-fr);
   o[0]=t/a;o[1]=0;o[2]=0;o[3]=0;o[4]=0;o[5]=t;o[6]=0;o[7]=0;o[8]=0;o[9]=0;o[10]=(fr+n)*nf;o[11]=-1;o[12]=0;o[13]=0;o[14]=2*fr*n*nf;o[15]=0;return o;}
