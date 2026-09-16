@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تكوين — المقر الرقمي</title>
+<meta name="description" content="تكوين: استوديو برمجيات يبني الأنظمة والمتاجر والتجارب الرقمية. تجربة ثلاثية الأبعاد تفاعلية داخل المقر الرقمي.">
+<meta name="theme-color" content="#050f0c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1f1a'/%3E%3Cpath d='M16 5l2.9 8.1L27 16l-8.1 2.9L16 27l-2.9-8.1L5 16l8.1-2.9z' fill='%2312a87a'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23e0a12a'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#050f0c; --bg-2:#071512; --ink:#e9f3ef; --muted:#9dbdb2; --faint:#6d8b81;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --brand:#0e8f66; --brand-2:#12a87a; --brand-3:#4fd1a5;
+  --gold:#e0a12a; --gold-2:#f0c460;
+  --grad:linear-gradient(135deg,#0e8f66 0%,#12a87a 55%,#e0a12a 100%);
+  --grad-txt:linear-gradient(120deg,#4fd1a5 0%,#8ee0c0 45%,#f0c460 100%);
+  --glass:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  --r:18px; --r-lg:26px;
+  --sh:0 24px 60px rgba(0,0,0,.45);
+  --mx:50%; --my:40%;
+  --ff:"Segoe UI",Tahoma,"Noto Kufi Arabic",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px;overflow-x:hidden;overflow-x:clip}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--ff);line-height:1.75;font-size:16px;
+  overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(18,168,122,.35)}
+:focus-visible{outline:2px solid var(--brand-2);outline-offset:3px;border-radius:8px}
+a{color:inherit}
+ul{list-style:none}
+img,svg{display:block;max-width:100%}
+.wrap{max-width:1200px;margin-inline:auto;padding-inline:24px}
+
+/* ===== الخلفية ثلاثية الأبعاد ===== */
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 78% 62% at 50% 42%,transparent 38%,rgba(5,15,12,.72) 100%),
+             linear-gradient(180deg,rgba(5,15,12,.55),transparent 18%,transparent 82%,rgba(5,15,12,.75))}
+.lights{position:fixed;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.55;
+  background:radial-gradient(420px 420px at var(--mx) var(--my),rgba(18,168,122,.20),transparent 62%),
+             radial-gradient(620px 620px at calc(100% - var(--mx)) calc(100% - var(--my)),rgba(224,161,42,.10),transparent 65%)}
+.no-webgl #gl{display:none}
+.no-webgl body,.no-webgl{}
+.no-webgl .vignette{background:
+  radial-gradient(ellipse 70% 55% at 50% 30%,rgba(14,143,102,.22),transparent 60%),
+  radial-gradient(ellipse 60% 50% at 80% 80%,rgba(224,161,42,.12),transparent 60%),
+  linear-gradient(180deg,#050f0c,#071512)}
+
+/* ===== شاشة الدخول ===== */
+.boot{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center;
+  transition:opacity .7s ease,visibility .7s ease}
+.boot.done{opacity:0;visibility:hidden}
+.boot-in{text-align:center;width:min(360px,80vw)}
+.boot-mark{width:74px;height:74px;margin:0 auto 22px;border-radius:22px;background:var(--grad);
+  display:grid;place-items:center;box-shadow:0 18px 50px rgba(14,143,102,.45);animation:pulse 2.2s ease-in-out infinite}
+.boot-mark svg{width:36px;height:36px;fill:#fff}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.boot-bar{height:4px;border-radius:99px;background:rgba(255,255,255,.09);overflow:hidden;margin-bottom:14px}
+.boot-bar span{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .4s ease}
+.boot-txt{color:var(--faint);font-size:13.5px;letter-spacing:.4px}
+.no-js .boot{display:none}
+
+/* ===== شريط التحكم العلوي ===== */
+.hud{position:fixed;top:0;inset-inline:0;z-index:60;transition:background .35s,border-color .35s,backdrop-filter .35s;
+  border-bottom:1px solid transparent}
+.hud.scrolled{background:rgba(5,15,12,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:var(--line)}
+.hud-in{display:flex;align-items:center;gap:18px;height:72px}
+.brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;font-weight:800;font-size:17px}
+.brand-mark{width:36px;height:36px;border-radius:11px;background:var(--grad);display:grid;place-items:center;
+  box-shadow:0 8px 26px rgba(14,143,102,.5);flex:none}
+.brand-mark svg{width:19px;height:19px;fill:#fff}
+.brand b{font-weight:800}
+.brand em{font-style:normal;font-size:11px;letter-spacing:3px;color:var(--gold-2);display:block;line-height:1;margin-top:2px}
+.hud-nav{display:flex;align-items:center;gap:22px;margin-inline-start:auto}
+.hud-nav a{text-decoration:none;color:var(--muted);font-size:14px;font-weight:600;transition:color .25s;position:relative}
+.hud-nav a:hover{color:var(--ink)}
+.hud-nav a.active{color:var(--brand-3)}
+.hud-nav a.active::after{content:"";position:absolute;inset-inline:-2px;bottom:-8px;height:2px;border-radius:2px;background:var(--grad)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;border:1px solid transparent;
+  padding:12px 24px;font-size:14.5px;font-weight:700;font-family:inherit;text-decoration:none;cursor:pointer;
+  transition:transform .3s,box-shadow .3s,border-color .3s,background .3s;white-space:nowrap}
+.btn svg{width:17px;height:17px;flex:none}
+.btn-primary{background:var(--grad);color:#04130f;box-shadow:0 12px 34px rgba(14,143,102,.38)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 46px rgba(14,143,102,.5)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line-2);color:var(--ink)}
+.btn-ghost:hover{border-color:rgba(79,209,165,.6);background:rgba(18,168,122,.09)}
+.btn-sm{padding:10px 18px;font-size:13.5px}
+.menu-btn{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line-2);background:rgba(255,255,255,.04);
+  cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.menu-btn span{width:19px;height:2px;background:var(--ink);border-radius:2px;transition:transform .3s,opacity .3s}
+.menu-btn.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-btn.active span:nth-child(2){opacity:0}
+.menu-btn.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ===== شريط المناطق الجانبي ===== */
+.rail{position:fixed;inset-inline-start:26px;top:50%;transform:translateY(-50%);z-index:55;
+  display:flex;flex-direction:column;gap:18px;align-items:center}
+.rail::before{content:"";position:absolute;inset-block:8px;inset-inline-start:50%;width:1px;background:var(--line);z-index:-1}
+.rail button{width:11px;height:11px;border-radius:50%;border:1px solid var(--line-2);background:rgba(255,255,255,.06);
+  cursor:pointer;transition:all .3s;position:relative;padding:0}
+.rail button::after{content:attr(data-label);position:absolute;inset-inline-start:22px;top:50%;transform:translateY(-50%);
+  font-size:12px;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .25s;font-family:var(--ff)}
+.rail button:hover::after{opacity:1}
+.rail button:hover,.rail button.active{background:var(--brand-2);border-color:var(--brand-2);box-shadow:0 0 0 4px rgba(18,168,122,.18)}
+.rail button.active{transform:scale(1.25)}
+
+/* ===== المحتوى ===== */
+.content{position:relative;z-index:10}
+.sec{padding:clamp(80px,11vh,140px) 0;position:relative}
+.sec-tag{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;letter-spacing:.6px;
+  color:var(--brand-3);background:rgba(14,143,102,.12);border:1px solid rgba(18,168,122,.35);
+  padding:7px 16px;border-radius:999px;margin-bottom:20px;backdrop-filter:blur(8px)}
+.sec-tag i{width:7px;height:7px;border-radius:50%;background:var(--brand-3);box-shadow:0 0 12px var(--brand-3);font-style:normal;animation:blink 2.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-size:clamp(38px,7vw,84px);line-height:1.15;font-weight:900;letter-spacing:-1px;margin-bottom:22px}
+h1 .g{background:var(--grad-txt);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(26px,4.2vw,46px);line-height:1.35;font-weight:900;margin-bottom:14px;letter-spacing:-.5px}
+h3{font-size:19px;font-weight:800;margin-bottom:8px}
+.lede{color:var(--muted);font-size:clamp(15.5px,1.6vw,18.5px);line-height:1.95;max-width:720px}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:var(--r);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--sh)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3>*,.grid-2>*{min-width:0}
+.card{padding:26px;position:relative;overflow:hidden;transition:transform .4s,border-color .4s,box-shadow .4s}
+.card:hover{transform:translateY(-6px);border-color:rgba(79,209,165,.42);box-shadow:0 28px 70px rgba(0,0,0,.5)}
+.card p{color:var(--muted);font-size:14.5px;line-height:1.9}
+.ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;margin-bottom:16px;flex:none;
+  background:linear-gradient(150deg,rgba(18,168,122,.22),rgba(224,161,42,.10));border:1px solid rgba(79,209,165,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.ico svg{width:26px;height:26px;stroke:var(--brand-3);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ico.gold svg{stroke:var(--gold-2)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal{opacity:1;transform:none}
+.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;letter-spacing:.5px;direction:ltr;unicode-bidi:isolate}
+</style>
+</head>
+<body class="no-js">
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="lights" aria-hidden="true"></div>
+
+<div id="boot" class="boot" aria-hidden="true">
+  <div class="boot-in">
+    <div class="boot-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3l3.4 9.6L29 16l-9.6 3.4L16 29l-3.4-9.6L3 16l9.6-3.4z"/></svg></div>
+    <div class="boot-bar"><span id="bootBar"></span></div>
+    <div class="boot-txt">جاري الدخول إلى مقر تكوين الرقمي…</div>
+  </div>
+</div>
+
+<header class="hud" id="hud">
+  <div class="wrap hud-in">
+    <a class="brand" href="#zone-entry" aria-label="تكوين — المقر الرقمي">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3l3.4 9.6L29 16l-9.6 3.4L16 29l-3.4-9.6L3 16l9.6-3.4z"/></svg></span>
+      <span>تكوين<em>TAKWEEN</em></span>
+    </a>
+    <nav class="hud-nav" id="hudNav" aria-label="التنقل">
+      <a href="#zone-hq">المقر</a>
+      <a href="#zone-projects">المشاريع</a>
+      <a href="#zone-lab">القدرات</a>
+      <a href="#zone-ai">الأفكار</a>
+      <a href="#zone-team">الفريق</a>
+      <a href="#zone-contact">تواصل</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#zone-contact">ابدأ مشروعًا</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="hudNav" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<nav class="rail" id="rail" aria-label="مناطق المقر"></nav>
+<main class="content">
+
+<!-- ============ 01 · الاستقبال ============ -->
+<section class="sec" id="zone-entry">
+  <div class="wrap">
+    <div class="sec-tag"><i></i> مقر رقمي مباشر · المنطقة 01 — الاستقبال</div>
+    <h1>نحن نبني <span class="g">الأنظمة</span><br>التي تشغّل الأفكار</h1>
+    <p class="lede">تكوين استوديو برمجيات: نصمّم ونبني أنظمة ومتاجر وتجارب رقمية تعمل فعليًا. ما تشاهد الآن ليس صفحة… بل مقر رقمي تتحرك داخله، وتشاهد مشاريعنا حيّة على الشاشة.</p>
+    <div class="hero-actions" style="display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 40px">
+      <a class="btn btn-primary" href="#zone-projects">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        ادخل غرفة المشاريع
+      </a>
+      <a class="btn btn-ghost" href="#zone-ai">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/><circle cx="12" cy="12" r="4"/></svg>
+        رتّب فكرتك أولًا
+      </a>
+    </div>
+    <div class="hero-meta reveal" style="display:flex;flex-wrap:wrap;gap:12px 34px;color:var(--faint);font-size:13.5px">
+      <span><b class="mono" style="color:var(--brand-3)">2</b> مشروعان منشوران يعملان الآن</span>
+      <span><b class="mono" style="color:var(--gold-2)">72h</b> متوسط بداية التسليم</span>
+      <span><b class="mono" style="color:var(--brand-3)">24/7</b> متابعة وتحديثات</span>
+    </div>
+    <div class="scroll-hint" aria-hidden="true" style="margin-top:56px;display:flex;align-items:center;gap:12px;color:var(--faint);font-size:12.5px">
+      <span style="width:26px;height:44px;border:1px solid var(--line-2);border-radius:14px;position:relative;display:inline-block">
+        <span style="position:absolute;inset-inline-start:50%;top:8px;width:4px;height:8px;border-radius:3px;background:var(--brand-3);transform:translateX(50%);animation:wheel 1.9s infinite"></span>
+      </span>
+      مرّر للدخول إلى المقر
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 · المقر ============ -->
+<section class="sec" id="zone-hq">
+  <div class="wrap">
+    <div class="sec-tag"><i></i> المنطقة 02 — الاستقبال الرئيسي</div>
+    <h2>أهلاً بك داخل <span style="background:var(--grad-txt);-webkit-background-clip:text;background-clip:text;color:transparent">مقر تكوين</span></h2>
+    <p class="lede">المقر الرقمي مُقسّم إلى مناطق — كل منطقة تُظهر جانبًا من عملنا. تتحرك الكاميرا معك أثناء التمرير، وتتفاعل الإضاءة مع حركة الماوس.</p>
+    <div class="grid-3" data-stagger style="margin-top:44px">
+      <article class="card glass reveal">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 3l3 2-3 2"/><circle cx="12" cy="14" r="7"/><path d="M12 11v3l2 2"/></svg></span>
+        <h3>الاستراتيجية</h3>
+        <p>نفهم الفكرة والهدف والسوق، ثم نحوّل كل ذلك إلى خطة واضحة قابلة للتنفيذ — لا نبدأ بالكود قبل أن نعرف إلى أين نمشي.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6 4 12l5 6M15 6l5 6-5 6"/></svg></span>
+        <h3>الهندسة والتطوير</h3>
+        <p>بناء نظيف وسريع: واجهات متقنة، أداء عالٍ، وتجربة عربية سليمة تعمل على الجوال والحاسوب بنفس الجودة.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico gold" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16M6 19V9m4 10V5m4 14v-7m4 7V8"/></svg></span>
+        <h3>التشغيل والنمو</h3>
+        <p>بعد الإطلاق نبقى معك: قياس، تحسين، تحديثات، ودعم يمنع أي توقف — نظامك يكبر مع نشاطك.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 · المشاريع ============ -->
+<section class="sec" id="zone-projects">
+  <div class="wrap">
+    <div class="sec-tag"><i></i> المنطقة 03 — غرفة المشاريع</div>
+    <h2>مشاريعنا تُجرّب… لا تُوصف</h2>
+    <p class="lede">هذي ليست صورًا — هذي أنظمة حقيقية تعمل مباشرة داخل الإطار. جرّبها بنفسك: مرّر الفأرة على أي إطار لتحسّك أنك تلمس الشاشة.</p>
+    <div class="grid-2" data-stagger style="margin-top:44px">
+
+      <article class="proj card glass reveal" data-tilt>
+        <div class="proj-chrome" aria-hidden="true">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="url mono">mohammedshabann26-maker.github.io/sabratha-fuel-queue</span>
+        </div>
+        <div class="proj-view">
+          <iframe data-src="https://mohammedshabann26-maker.github.io/sabratha-fuel-queue/" title="معاينة مشروع فل تنك صبراتة" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div class="proj-meta">
+          <span class="chip">نظام حقيقي · حلول تقنية</span>
+          <h3>فل تنك صبراتة</h3>
+          <p>منصة تنظيم طوابير تعبئة الوقود (بنزين وتانكي) في صبراتة — تسجيل الدور، توزيع عادل تلقائي بين المحطات، ومتابعة لحظية بدون وقوف ولا مبيت.</p>
+          <div class="proj-actions">
+            <a class="btn btn-primary btn-sm" href="https://mohammedshabann26-maker.github.io/sabratha-fuel-queue/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4 10 14M18 14v6H4V6h6"/></svg>
+              افتح المشروع
+            </a>
+            <span class="hint">معاينة حيّة أعلاه</span>
+            <button class="btn btn-ghost btn-sm act" type="button">تفعيل التفاعل</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="proj card glass reveal" data-tilt>
+        <div class="proj-chrome" aria-hidden="true">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="url mono">mohammedshabann26-maker.github.io/city-shop</span>
+        </div>
+        <div class="proj-view">
+          <iframe data-src="https://mohammedshabann26-maker.github.io/city-shop/" title="معاينة مشروع City Shop" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div class="proj-meta">
+          <span class="chip">أنظمة إدارة · متاجر ومطاعم</span>
+          <h3>City Shop</h3>
+          <p>منصة إدارة المطاعم والمتاجر: نقاط بيع، مخزون، فواتير وتقارير، بواجهة عربية كاملة وسريعة على الجوال والحاسوب.</p>
+          <div class="proj-actions">
+            <a class="btn btn-primary btn-sm" href="https://mohammedshabann26-maker.github.io/city-shop/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4 10 14M18 14v6H4V6h6"/></svg>
+              افتح المشروع
+            </a>
+            <span class="hint">معاينة حيّة أعلاه</span>
+            <button class="btn btn-ghost btn-sm act" type="button">تفعيل التفاعل</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 · القدرات ============ -->
+<section class="sec" id="zone-lab">
+  <div class="wrap">
+    <div class="sec-tag"><i></i> المنطقة 04 — مختبر القدرات</div>
+    <h2>نبنيها بأنفسنا… من الصفر</h2>
+    <p class="lede">كل رسمة في هذا المقر مرسومة عندنا سطرًا بسطر — لا أيقونات جاهزة ولا قوالب. نفس الدقّة نضعها في كل نظام نسلّمه.</p>
+    <div class="grid-3" data-stagger style="margin-top:44px">
+      <article class="card glass reveal">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 13h5M7 16h8"/></svg></span>
+        <h3>أنظمة إدارة</h3><p>لوحات تحكم، مخزون، فواتير، تقارير، وصلاحيات مستخدمين — أنظمة تشغيل جاهزة لتشغيل نشاطك لا للتفرّج فقط.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5h3l2.3 10.4a1.6 1.6 0 0 0 1.57 1.25h7.4a1.6 1.6 0 0 0 1.56-1.2L20.5 8H6.2"/><circle cx="9.6" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg></span>
+        <h3>متاجر إلكترونية</h3><p>كتالوج، سلة، دفع، وتتبّع طلبات — متجر يبيع فعلًا ويشتغل من الجوال بسلاسة.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><path d="M14 14h3v3h-3zM18.5 18.5h2v2h-2z"/></svg></span>
+        <h3>منيو إلكتروني ذكي</h3><p>قائمة ترد على عملائك تلقائيًا في واتساب وفيسبوك، وتعرض أصنافك وتستقبل الطلبات 24 ساعة.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico gold" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 8.5h9a5.5 5.5 0 0 1 0 11h-9a5.5 5.5 0 0 1 0-11z"/><path d="M9.5 12v3M12 11v4M14.5 12v3"/></svg></span>
+        <h3>تطوير ألعاب</h3><p>ألعاب وتجارب تفاعلية تعمل على المتصفح والجوال، بحركة سلسة وأداء خفيف.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico gold" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4.5 4.5 0 0 0-6 6L3 18v3h3l5.7-5.7a4.5 4.5 0 0 0 6-6L14.5 12l-2.5-2.5z"/></svg></span>
+        <h3>حلول المشاكل التقنية</h3><p>تشخيص الأعطال، إصلاح الأنظمة المتوقفة، تحسين السرعة والأمان، وترتيب البنية التقنية.</p>
+      </article>
+      <article class="card glass reveal">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V7.5L12 4l8 3.5V20"/><path d="M4 20h16M9 20v-6h6v6"/></svg></span>
+        <h3>هوية وواجهات</h3><p>تصميم واجهات وتجربة استخدام عربية أصيلة، مع دليل هوية يجعل علامتك معروفة من أول نظرة.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 · منظّم الأفكار ============ -->
+<section class="sec" id="zone-ai">
+  <div class="wrap">
+    <div class="sec-tag"><i></i> المنطقة 05 — مُنظّم الأفكار</div>
+    <h2>اكتب فكرتك… نرتّبها لك في ثوانٍ</h2>
+    <p class="lede">اكتب فكرتك بأي شكل، وسيحوّلها المُنظّم إلى: هدف واضح، ميزات، خطوات تنفيذ، ونقاط تحتاج قرارًا.</p>
+    <div class="organizer glass reveal" style="margin-top:38px;padding:26px">
+      <label for="ideaIn" style="display:block;font-weight:700;margin-bottom:10px;font-size:15px">فكرتك أو مشكلتك بالتفصيل</label>
+      <textarea id="ideaIn" rows="5" placeholder="مثال: عندي ورشة صيانة وأريد نظام يحجز مواعيد للعملاء ويتابع الطلبات ويرسل تذكير قبل الموعد…" style="width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line-2);border-radius:14px;padding:16px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.8;resize:vertical"></textarea>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px">
+        <button class="btn btn-primary" id="orgBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m6 6h3M3 12h3m12 0a6 6 0 1 1-12 0 6 6 0 0 1 12 0"/></svg>
+          رتّب فكرتي
+        </button>
+        <button class="btn btn-ghost btn-sm" id="orgClear" type="button">مسح</button>
+        <span style="color:var(--faint);font-size:12.5px">نماذج جاهزة: نظام حجز · متجر · منيو واتساب</span>
+      </div>
+      <div id="orgOut" class="org-out" aria-live="polite" style="margin-top:22px;display:grid;gap:14px"></div>
+      <p style="color:var(--faint);font-size:12.5px;margin-top:16px;line-height:1.9">
+        ملاحظة صريحة: هذا مُنظّم أفكار يعمل محليًا داخل صفحتك (تجربة أولية بلا اتصال بخدمة خارجية).
+        ربطه بنموذج ذكاء اصطناعي حقيقي يتم عند الطلب عبر وسيط آمن.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 · غرفة العمليات ============ -->
+<section class="sec" id="zone-team">
+  <div class="wrap">
+    <div class="sec-tag"><i></i> المنطقة 06 — غرفة العمليات</div>
+    <h2>فريق يعمل… خلف الشاشة</h2>
+    <p class="lede">واجهة حيّة لمحاكاة سير العمل داخل الاستوديو: كل تخصص يتحرك بالتوازي حتى يخرج النظام جاهزًا.</p>
+    <div class="console glass reveal" style="margin-top:38px;padding:0;overflow:hidden" id="teamConsole">
+      <div class="console-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="mono">takween://ops · live</span>
+        <span class="live"><i></i> متصل</span>
+      </div>
+      <div class="console-body">
+        <div class="row" data-speed="1.05"><span class="mono t">01</span><span class="rn">التصميم والواجهات</span><span class="bar"><i></i></span><span class="st work">قيد العمل</span></div>
+        <div class="row" data-speed="1.35"><span class="mono t">02</span><span class="rn">هندسة الواجهة الأمامية</span><span class="bar"><i></i></span><span class="st work">قيد العمل</span></div>
+        <div class="row" data-speed=".85"><span class="mono t">03</span><span class="rn">الأنظمة وقواعد البيانات</span><span class="bar"><i></i></span><span class="st rev">مراجعة</span></div>
+        <div class="row" data-speed="1.2"><span class="mono t">04</span><span class="rn">الاختبار والجودة</span><span class="bar"><i></i></span><span class="st work">قيد العمل</span></div>
+        <div class="row" data-speed=".7"><span class="mono t">05</span><span class="rn">الدعم والمتابعة</span><span class="bar"><i></i></span><span class="st ok">جاهز 24/7</span></div>
+      </div>
+      <div class="console-foot">
+        <span>المهام المكتملة اليوم <b class="mono" id="doneCount">128</b></span>
+        <span>زمن الاستجابة <b class="mono">0.8s</b></span>
+        <span>المشاريع النشطة <b class="mono">2</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 · التواصل ============ -->
+<section class="sec" id="zone-contact">
+  <div class="wrap">
+    <div class="cta glass reveal" style="padding:clamp(34px,6vw,68px);text-align:center;position:relative;overflow:hidden">
+      <div class="cta-glow" aria-hidden="true"></div>
+      <div class="sec-tag"><i></i> المنطقة 07 — بوابة الخروج</div>
+      <h2>جاهز نبني نظامك؟</h2>
+      <p class="lede" style="margin:0 auto 30px;text-align:center">قل لنا فكرتك، ونرجع لك بخطة واضحة: المراحل، المدة، والسعر — بدون تعقيد.</p>
+      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:14px">
+        <!-- TODO: ضع رقم واتسابك هنا -->
+        <a class="btn btn-primary" href="https://wa.me/000000000000" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.05 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.3-1.5A9.9 9.9 0 1 0 12.05 2m0 1.8a8.1 8.1 0 1 1-4.1 15.1l-.3-.2-3.1.9.9-3-.2-.3A8.1 8.1 0 0 1 12.05 3.8m-3.3 4c-.2 0-.5.1-.7.4-.3.3-.9 1-.9 2.2s.9 2.4 1 2.6c.1.2 1.7 2.8 4.3 3.8 2.2.8 2.6.7 3.1.6.5 0 1.6-.6 1.8-1.3.2-.6.2-1.2.2-1.3-.1-.1-.3-.2-.6-.3l-2-.9c-.3-.1-.5-.1-.7.1l-1 1.2c-.2.2-.4.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.1-.3 0-.4.1-.6l.5-.6c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5l-.9-2c-.2-.5-.4-.4-.6-.4z"/></svg>
+          تواصل عبر واتساب
+        </a>
+        <a class="btn btn-ghost" href="https://mohammedshabann26-maker.github.io/nova-studio/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+          الموقع الرئيسي لتكوين
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div>
+      <div class="brand" style="margin-bottom:10px">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 3l3.4 9.6L29 16l-9.6 3.4L16 29l-3.4-9.6L3 16l9.6-3.4z"/></svg></span>
+        <span>تكوين<em>TAKWEEN</em></span>
+      </div>
+      <p style="color:var(--faint);font-size:13.5px;max-width:320px">المقر الرقمي — تجربة ثلاثية الأبعاد من تصميم وبناء تكوين. هذه نسخة جانبية للمعاينة.</p>
+    </div>
+    <div class="foot-links">
+      <a href="#zone-hq">المقر</a><a href="#zone-projects">المشاريع</a><a href="#zone-lab">القدرات</a><a href="#zone-team">الفريق</a><a href="#zone-contact">تواصل</a>
+    </div>
+    <p class="foot-copy">© 2026 تكوين — TAKWEEN · تجربة معاينة (نسخة جانبية)</p>
+  </div>
+</footer>
+</main>
+
+<style>
+/* ===== عناصر المشاريع والمكوّنات ===== */
+.proj{padding:0;overflow:hidden}
+.proj-chrome{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.035)}
+.dots{display:inline-flex;gap:6px;flex:none}
+.dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.16);display:block}
+.dots i:nth-child(1){background:#f87171}.dots i:nth-child(2){background:#fbbf24}.dots i:nth-child(3){background:#34d399}
+.url{font-size:11.5px;color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-inline-start:auto}
+.proj-view{position:relative;aspect-ratio:16/10;background:#0a1512;overflow:hidden}
+.proj-view iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;
+  transform:scale(var(--s,.44));transform-origin:top left;pointer-events:none;filter:saturate(1.02)}
+.proj-view.loading::after{content:"جاري تحميل المعاينة…";position:absolute;inset:0;display:grid;place-items:center;color:var(--faint);font-size:13.5px}
+.proj-view.live iframe{pointer-events:auto}
+.proj-view.live{box-shadow:inset 0 0 0 1px rgba(79,209,165,.5)}
+.proj.locked{transform:none !important}
+.proj-meta{padding:22px}
+.chip{display:inline-block;font-size:12px;font-weight:700;color:var(--gold-2);background:rgba(224,161,42,.12);
+  border:1px solid rgba(224,161,42,.32);padding:5px 13px;border-radius:999px;margin-bottom:12px}
+.proj-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}
+.hint{color:var(--faint);font-size:12.5px}
+.proj{transition:transform .5s cubic-bezier(.2,.6,.2,1),border-color .4s,box-shadow .4s;transform-style:preserve-3d}
+.proj.tilt{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px)}
+@keyframes wheel{0%{transform:translate(50%,0);opacity:1}70%{transform:translate(50%,16px);opacity:0}100%{opacity:0}}
+
+/* ===== غرفة العمليات ===== */
+.console-bar{display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.035)}
+.live{margin-inline-start:auto;font-size:12px;color:#6ee7b7;display:inline-flex;align-items:center;gap:7px}
+.live i{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 10px #34d399;animation:blink 1.8s infinite}
+.console-body{padding:20px 18px;display:grid;gap:14px}
+.row{display:grid;grid-template-columns:34px minmax(140px,1.1fr) 2fr auto;align-items:center;gap:14px}
+.row .t{font-size:12px;color:var(--faint)}
+.row .rn{font-size:14.5px;font-weight:600}
+.bar{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;position:relative}
+.bar i{display:block;height:100%;width:35%;border-radius:99px;background:var(--grad);
+  animation:fill 3.4s ease-in-out infinite alternate}
+@keyframes fill{0%{width:18%}55%{width:78%}100%{width:46%}}
+.st{font-size:11.5px;padding:4px 11px;border-radius:999px;border:1px solid;white-space:nowrap}
+.st.work{color:#a9d9c8;border-color:rgba(79,209,165,.35);background:rgba(18,168,122,.12)}
+.st.rev{color:var(--gold-2);border-color:rgba(224,161,42,.35);background:rgba(224,161,42,.12)}
+.st.ok{color:#6ee7b7;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}
+.console-foot{display:flex;flex-wrap:wrap;gap:12px 30px;padding:14px 18px;border-top:1px solid var(--line);
+  color:var(--faint);font-size:12.5px;background:rgba(0,0,0,.16)}
+.console-foot b{color:var(--brand-3)}
+
+/* ===== منظّم الأفكار ===== */
+.org-out .o-card{background:rgba(0,0,0,.22);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+  animation:pop .5s ease both}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.o-card h4{font-size:14px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:9px;color:var(--brand-3)}
+.o-card h4.g{color:var(--gold-2)}
+.o-card ul{display:grid;gap:8px}
+.o-card li{font-size:14px;color:var(--muted);padding-inline-start:18px;position:relative;line-height:1.8}
+.o-card li::before{content:"";position:absolute;inset-inline-start:0;top:11px;width:7px;height:7px;border-radius:2px;background:var(--brand-2)}
+.o-card.g li::before{background:var(--gold)}
+
+/* ===== التواصل والفوتر ===== */
+.cta-glow{position:absolute;width:700px;height:700px;border-radius:50%;filter:blur(120px);top:-420px;left:50%;
+  transform:translateX(-50%);background:radial-gradient(circle,rgba(14,143,102,.35),rgba(224,161,42,.14) 45%,transparent 70%);pointer-events:none}
+.foot{border-top:1px solid var(--line);padding:44px 0 34px;background:rgba(0,0,0,.25);position:relative;z-index:10}
+.foot-in{display:flex;flex-wrap:wrap;gap:22px;align-items:center;justify-content:space-between}
+.foot-links{display:flex;flex-wrap:wrap;gap:8px 20px}
+.foot-links a{color:var(--muted);text-decoration:none;font-size:13.5px;transition:color .25s}
+.foot-links a:hover{color:var(--brand-3)}
+.foot-copy{color:var(--faint);font-size:12.5px;width:100%;text-align:center;margin-top:8px}
+
+@media (max-width:980px){
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .rail{display:none}
+}
+@media (max-width:768px){
+  .grid-3,.grid-2{grid-template-columns:1fr}
+  .hud-nav{position:fixed;top:80px;inset-inline:14px;flex-direction:column;align-items:stretch;gap:2px;
+    background:rgba(6,18,15,.97);border:1px solid var(--line);border-radius:16px;padding:12px;display:none}
+  .hud-nav.open{display:flex}
+  .hud-nav a{padding:12px 14px;border-radius:10px;font-size:15px}
+  .hud-nav a.active::after{display:none}
+  .menu-btn{display:inline-flex}
+  .hud-nav + .btn{display:none}
+  .proj-view{aspect-ratio:4/3}
+  .proj-view iframe{transform:scale(.34)}
+  .row{grid-template-columns:30px 1fr;grid-template-areas:"t n" "b b" "s s";row-gap:8px}
+  .row .rn{grid-area:n}.row .bar{grid-area:b}.row .st{grid-area:s;justify-self:start}.row .t{grid-area:t}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .bar i,.live i,.boot-mark{animation:none}
+  .card:hover,.proj.tilt{transform:none}
+}
+</style>
+
+<script>
+(function(){
+"use strict";
+var html=document.documentElement;
+html.classList.remove('no-js');
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+
+/* ---------- شاشة الدخول ---------- */
+var boot=document.getElementById('boot'),bootBar=document.getElementById('bootBar'),p=0;
+var bootTimer=setInterval(function(){p+=Math.random()*22+8; if(p>100)p=100; bootBar.style.width=p+'%';
+  if(p>=100){clearInterval(bootTimer); setTimeout(function(){boot.classList.add('done');},240);}},130);
+setTimeout(function(){boot.classList.add('done');},2600);
+
+/* ---------- الشريط والمحتوى ---------- */
+var hud=document.getElementById('hud');
+addEventListener('scroll',function(){hud.classList.toggle('scrolled',scrollY>10);},{passive:true});
+var menuBtn=document.getElementById('menuBtn'),hudNav=document.getElementById('hudNav');
+menuBtn.addEventListener('click',function(){var o=hudNav.classList.toggle('open');
+  menuBtn.classList.toggle('active',o);menuBtn.setAttribute('aria-expanded',o?'true':'false');});
+hudNav.addEventListener('click',function(e){if(e.target.closest('a')){hudNav.classList.remove('open');menuBtn.classList.remove('active');}});
+
+/* ---------- شريط المناطق + التتبع ---------- */
+var zones=[['zone-entry','الاستقبال'],['zone-hq','المقر'],['zone-projects','المشاريع'],['zone-lab','القدرات'],['zone-ai','الأفكار'],['zone-team','العمليات'],['zone-contact','تواصل']];
+var rail=document.getElementById('rail'),railBtns=[];
+zones.forEach(function(z){
+  var sec=document.getElementById(z[0]); if(!sec) return;
+  var b=document.createElement('button'); b.type='button'; b.setAttribute('data-label',z[1]);
+  b.setAttribute('aria-label','الانتقال إلى '+z[1]);
+  b.addEventListener('click',function(){sec.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});
+  rail.appendChild(b); railBtns.push(b);
+});
+var navLinks=[].slice.call(hudNav.querySelectorAll('a'));
+if('IntersectionObserver' in window){
+  var ioZone=new IntersectionObserver(function(es){
+    es.forEach(function(en){ if(!en.isIntersecting) return;
+      var i=zones.findIndex(function(z){return z[0]===en.target.id;});
+      railBtns.forEach(function(b,k){b.classList.toggle('active',k===i);});
+      navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+en.target.id);});
+    });},{rootMargin:'-45% 0px -50% 0px'});
+  zones.forEach(function(z){var s=document.getElementById(z[0]); if(s) ioZone.observe(s);});
+  var ioRev=new IntersectionObserver(function(es){es.forEach(function(en){ if(en.isIntersecting){en.target.classList.add('in'); ioRev.unobserve(en.target);} });},{threshold:.12,rootMargin:'0px 0px -50px'});
+  document.querySelectorAll('.reveal').forEach(function(el,i){ if(el.parentElement&&el.parentElement.hasAttribute('data-stagger')) el.style.transitionDelay=(i%6*90)+'ms'; ioRev.observe(el); });
+} else { document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');}); }
+
+/* ---------- تحميل معاينات المشاريع عند الاقتراب ---------- */
+if('IntersectionObserver' in window){
+  var ioIf=new IntersectionObserver(function(es){es.forEach(function(en){ if(!en.isIntersecting) return;
+    var f=en.target.querySelector('iframe[data-src]'); if(f){ f.parentElement.classList.add('loading');
+      f.addEventListener('load',function(){f.parentElement.classList.remove('loading');});
+      f.src=f.getAttribute('data-src'); f.removeAttribute('data-src'); }
+    ioIf.unobserve(en.target); });},{rootMargin:'260px'});
+  document.querySelectorAll('.proj-view').forEach(function(v){ioIf.observe(v);});
+}
+
+/* ---------- إضاءة تتبع الماوس + ميلان البطاقات ---------- */
+if(!isTouch&&!reduce){
+  addEventListener('mousemove',function(e){ html.style.setProperty('--mx',(e.clientX/innerWidth*100).toFixed(1)+'%');
+    html.style.setProperty('--my',(e.clientY/innerHeight*100).toFixed(1)+'%'); },{passive:true});
+  document.querySelectorAll('[data-tilt]').forEach(function(card){
+    card.addEventListener('mousemove',function(e){ if(card.classList.contains('locked')) return; var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      card.style.setProperty('--ry',(x*7).toFixed(2)+'deg'); card.style.setProperty('--rx',(-y*6).toFixed(2)+'deg');
+      card.classList.add('tilt'); });
+    card.addEventListener('mouseleave',function(){ card.classList.remove('tilt');
+      card.style.setProperty('--ry','0deg'); card.style.setProperty('--rx','0deg'); });
+  });
+}
+
+/* ---------- تفعيل التفاعل داخل معاينات المشاريع ---------- */
+document.querySelectorAll('.proj').forEach(function(card){
+  var b=card.querySelector('.act'), v=card.querySelector('.proj-view');
+  if(!b||!v) return;
+  b.addEventListener('click',function(){
+    var on=v.classList.toggle('live');
+    card.classList.toggle('locked',on);
+    b.textContent=on?'إيقاف التفاعل':'تفعيل التفاعل';
+    card.style.setProperty('--ry','0deg'); card.style.setProperty('--rx','0deg');
+  });
+});
+
+/* ---------- غرفة العمليات ---------- */
+document.querySelectorAll('#teamConsole .row').forEach(function(r,i){
+  var bar=r.querySelector('.bar i'), sp=parseFloat(r.getAttribute('data-speed')||'1');
+  if(bar){ bar.style.animationDuration=(3.6*sp).toFixed(2)+'s'; bar.style.animationDelay=(i*.28).toFixed(2)+'s'; }
+});
+var doneEl=document.getElementById('doneCount'),doneN=128;
+setInterval(function(){ doneN+=Math.floor(Math.random()*2)+1; doneEl.textContent=doneN; },4200);
+
+/* ---------- منظّم الأفكار (محلي) ---------- */
+var ideaIn=document.getElementById('ideaIn'),orgBtn=document.getElementById('orgBtn'),orgClear=document.getElementById('orgClear'),orgOut=document.getElementById('orgOut');
+var FEAT=['يرسل','يرسل','يتابع','تتبع','يضيف','إضافة','يعرض','يحجز','حجز','يتيح','يخزن','مخزون','فاتورة','فواتير','تقرير','تقارير','إشعار','تذكير','تصدير','لوحة','صلاحيات','دفع','طلب','طلبات','منيو','رسائل','واتساب','فيسبوك'];
+var DEC=['يجب','نحتاج','نحتاج','سؤال','قرار','مشكلة','خطر','ميزانية','متى','كم','هل','قانوني','تسويق'];
+function sentences(t){ return t.replace(/\s+/g,' ').split(/[\.\؟\?!\،\؛\n]+/).map(function(s){return s.trim();}).filter(function(s){return s.length>3;}); }
+function icoPen(){return '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16v4z"/></svg>';}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function blockCards(goal,feats,steps,decs){
+  var I={goal:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>',
+         feat:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>',
+         steps:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h5v-5h5v-5h5V5"/></svg>',
+         dec:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 1 1 3.6 2.4c-.8.4-1.1 1-1.1 1.8v.3"/><path d="M12 17.2h.01"/></svg>',
+         pen:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16v4z"/></svg>'};
+  var h='';
+  h+='<div class="o-card"><h4>'+I.goal+' الهدف</h4><ul><li>'+esc(goal)+'</li></ul></div>';
+  h+='<div class="o-card"><h4>'+I.feat+' الميزات المقترحة</h4><ul>'+feats.map(function(f){return '<li>'+esc(f)+'</li>';}).join('')+'</ul></div>';
+  h+='<div class="o-card"><h4>'+I.steps+' خطوات التنفيذ المقترحة</h4><ul>'+steps.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul></div>';
+  h+='<div class="o-card g"><h4 class="g">'+I.dec+' نقاط تحتاج قرارًا</h4><ul>'+decs.map(function(d){return '<li>'+esc(d)+'</li>';}).join('')+'</ul></div>';
+  return h;
+}
+orgBtn.addEventListener('click',function(){
+  var t=(ideaIn.value||'').trim();
+  if(t.length<10){ orgOut.innerHTML='<div class="o-card"><h4>'+icoPen()+' اكتب فكرتك أولًا</h4><ul><li>اكتب سطرين على الأقل عن نشاطك والمشكلة التي تريد حلها.</li></ul></div>'; return; }
+  var ss=sentences(t), goal=ss[0]||t, feats=[],decs=[];
+  ss.forEach(function(s){ if(FEAT.some(function(k){return s.indexOf(k)>-1;})) feats.push(s);
+    else if(DEC.some(function(k){return s.indexOf(k)>-1;})) decs.push(s); });
+  var steps=['جلسة فهم قصيرة: نثبّت الهدف والمستخدمين','تصميم واجهة مبدئية (نسخة تراها وتوافق عليها)','بناء النسخة الأولى + ربط قاعدة البيانات','اختبار على الجوال والحاسوب','إطلاق + تدريب + متابعة شهرية'];
+  if(!feats.length) feats=['واجهة عربية بسيطة وسريعة','لوحة تحكم لإدارة البيانات','إشعارات وتقارير أساسية','تسجيل دخول وصلاحيات'];
+  if(!decs.length) decs=['من يدير النظام بعد التسليم؟','هل يحتاج ربط دفع/واتساب؟','حجم البيانات المتوقع؟'];
+  orgOut.innerHTML=blockCards(goal,feats,steps.slice(0,5),decs.slice(0,4));
+});
+orgClear.addEventListener('click',function(){ ideaIn.value=''; orgOut.innerHTML=''; });
+
+/* ---------- محرك المشهد ثلاثي الأبعاد ---------- */
+var cv=document.getElementById('gl');
+var gl=cv.getContext('webgl',{antialias:false,alpha:false,powerPreference:'high-performance'})||cv.getContext('experimental-webgl');
+if(!gl){ html.classList.add('no-webgl'); return; }
+
+function persp(o,f,a,n,fr){var t=1/Math.tan(f/2),nf=1/(n-fr);
+ o[0]=t/a;o[1]=0;o[2]=0;o[3]=0;o[4]=0;o[5]=t;o[6]=0;o[7]=0;o[8]=0;o[9]=0;o[10]=(fr+n)*nf;o[11]=-1;o[12]=0;o[13]=0;o[14]=2*fr*n*nf;o[15]=0;return o;}
+function lookAt(o,ex,ey,ez,cx,cy,cz,ux,uy,uz){
+ var zx=ex-cx,zy=ey-cy,zz=ez-cz,l=1/Math.sqrt(zx*zx+zy*zy+zz*zz);zx*=l;zy*=l;zz*=l;
+ var xx=uy*zz-uz*zy,xy=uz*zx-ux*zz,xz=ux*zy-uy*zx;l=Math.sqrt(xx*xx+xy*xy+xz*xz);
+ if(l<1e-6){xx=1;xy=0;xz=0;}else{l=1/l;xx*=l;xy*=l;xz*=l;}
+ var yx=zy*xz-zz*xy,yy=zz*xx-zx*xz,yz=zx*xy-zy*xx;
+ o[0]=xx;o[1]=yx;o[2]=zx;o[3]=0;o[4]=xy;o[5]=yy;o[6]=zy;o[7]=0;o[8]=xz;o[9]=yz;o[10]=zz;o[11]=0;
+ o[12]=-(xx*ex+xy*ey+xz*ez);o[13]=-(yx*ex+yy*ey+yz*ez);o[14]=-(zx*ex+zy*ey+zz*ez);o[15]=1;return o;}
+function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
+ if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(o));}return o;}
+function prog(vs,fs){var p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);return p;}
+
+var P_PT=prog(
+ 'attribute vec3 aP;attribute vec3 aC;attribute float aS;uniform mat4 uP,uV;uniform float uK;varying vec3 vC;varying float vF;'+
+ 'void main(){vec4 vp=uV*vec4(aP,1.0);float d=-vp.z;vF=clamp(1.0-d/430.0,0.0,1.0);vF*=vF;vC=aC;'+
+ 'gl_PointSize=clamp(uK*aS/max(d,1.0),1.0,14.0);gl_Position=uP*vp;}',
+ 'precision mediump float;varying vec3 vC;varying float vF;void main(){vec2 q=gl_PointCoord-0.5;float a=smoothstep(0.5,0.02,length(q));gl_FragColor=vec4(vC*vF,a*vF*0.95);}');
+var P_LN=prog(
+ 'attribute vec3 aP;attribute vec3 aC;uniform mat4 uP,uV;varying vec3 vC;varying float vF;'+
+ 'void main(){vec4 vp=uV*vec4(aP,1.0);float d=-vp.z;vF=clamp(1.0-d/440.0,0.0,1.0);vF*=vF*0.9;vC=aC;gl_Position=uP*vp;}',
+ 'precision mediump float;varying vec3 vC;varying float vF;void main(){gl_FragColor=vec4(vC*vF,vF);}');
+var P_SG=prog(
+ 'attribute vec3 aC;attribute vec2 aUV;attribute vec2 aWH;uniform mat4 uP,uV;varying vec2 vUV;'+
+ 'void main(){vec4 vp=uV*vec4(aC,1.0);vp.xy+=(aUV-0.5)*aWH;vUV=aUV;gl_Position=uP*vp;}',
+ 'precision mediump float;uniform sampler2D uT;varying vec2 vUV;void main(){vec4 c=texture2D(uT,vUV);gl_FragColor=c;}');
+
+var L=function(p,n){return {p:p,U:function(k){return gl.getUniformLocation(p,k)},A:function(k){return gl.getAttribLocation(p,k)},n:n};};
+var lPT=L(P_PT,0),lLN=L(P_LN,0),lSG=L(P_SG,0);
+var uPT={P:gl.getUniformLocation(P_PT,'uP'),V:gl.getUniformLocation(P_PT,'uV'),K:gl.getUniformLocation(P_PT,'uK')};
+var uLN={P:gl.getUniformLocation(P_LN,'uP'),V:gl.getUniformLocation(P_LN,'uV')};
+var uSG={P:gl.getUniformLocation(P_SG,'uP'),V:gl.getUniformLocation(P_SG,'uV'),T:gl.getUniformLocation(P_SG,'uT')};
+var A_PT={p:gl.getAttribLocation(P_PT,'aP'),c:gl.getAttribLocation(P_PT,'aC'),s:gl.getAttribLocation(P_PT,'aS')};
+var A_LN={p:gl.getAttribLocation(P_LN,'aP'),c:gl.getAttribLocation(P_LN,'aC')};
+var A_SG={c:gl.getAttribLocation(P_SG,'aC'),uv:gl.getAttribLocation(P_SG,'aUV'),wh:gl.getAttribLocation(P_SG,'aWH')};
+var ATT_ALL=[A_PT.p,A_PT.c,A_PT.s,A_LN.p,A_LN.c,A_SG.c,A_SG.uv,A_SG.wh];
+function useAttrs(list){
+  ATT_ALL.forEach(function(l){ if(l<0) return; if(list.indexOf(l)>-1){ gl.enableVertexAttribArray(l); } else { gl.disableVertexAttribArray(l); } });
+}
+gl.getExtension('OES_element_index_uint');
+
+/* --- الجزيئات --- */
+var TOTAL=640,ZDIST=540;
+var N=isTouch?150:420;
+var pPos=new Float32Array(N*3),pCol=new Float32Array(N*3),pSize=new Float32Array(N),pVel=new Float32Array(N);
+var GREEN=[18/255,168/255,122/255],GOLD=[224/255,161/255,42/255],TEAL=[79/255,209/255,165/255];
+for(var i=0;i<N;i++){
+  pPos[i*3]=(Math.random()*2-1)*7.5; pPos[i*3+1]=-2.6+Math.random()*6; pPos[i*3+2]=-Math.random()*TOTAL;
+  var c=Math.random()<.72?GREEN:(Math.random()<.6?GOLD:TEAL);
+  var mix=Math.random()*.7;
+  pCol[i*3]=c[0]+mix*(1-c[0]); pCol[i*3+1]=c[1]+mix*(1-c[1]); pCol[i*3+2]=c[2]+mix*(1-c[2]);
+  pSize[i]=1.2+Math.random()*3.4; pVel[i]=16+Math.random()*34;
+}
+var bPT_P=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bPT_P); gl.bufferData(gl.ARRAY_BUFFER,pPos,gl.DYNAMIC_DRAW);
+var bPT_C=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bPT_C); gl.bufferData(gl.ARRAY_BUFFER,pCol,gl.STATIC_DRAW);
+var bPT_S=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bPT_S); gl.bufferData(gl.ARRAY_BUFFER,pSize,gl.STATIC_DRAW);
+
+/* --- الشبكة والغرف --- */
+var lb=[],lc=[];
+function line(x1,y1,z1,x2,y2,z2,c,al){
+  lb.push(x1,y1,z1,x2,y2,z2);
+  var f=(al===undefined?1:al);
+  lc.push(c[0]*f,c[1]*f,c[2]*f, c[0]*f,c[1]*f,c[2]*f);
+}
+var DF=0.20,DG=0.34;
+for(var z=6;z>-TOTAL;z-=8){
+  line(-7.5,-3.0,z,7.5,-3.0,z,GREEN,DF);
+  line(-7.5,3.4,z,7.5,3.4,z,GREEN,DF*0.6);
+}
+for(var x=-7.5;x<=7.5;x+=3){
+  line(x,-3.0,6,x,-3.0,-TOTAL,GREEN,DF);
+  line(x,3.4,6,x,3.4,-TOTAL,GREEN,DF*0.6);
+}
+var ZONES3D=[[-70,'الاستقبال','ENTRY'],[-180,'الأنظمة','SYSTEMS'],[-300,'المشاريع','PROJECTS'],[-420,'الفريق','TEAM'],[-520,'تواصل','CONTACT']];
+ZONES3D.forEach(function(zn){
+  var z=zn[0],cs=[GREEN,GOLD];
+  for(var k=0;k<2;k++){
+    var cx=k?4.9:-4.9,rx=k?4.9:-4.9,c=cs[k];
+    line(cx,-3,z,rx,-3,z,c,DG); line(cx,3.4,z,rx,3.4,z,c,DG*0.7);
+    line(rx,-3,z,rx,-3,z-0.01,c,DG);
+  }
+  line(-4.9,-3,z,-4.9,3.4,z,GOLD,DG); line(4.9,-3,z,4.9,3.4,z,GOLD,DG);
+  line(-4.9,-3,z,-4.9,3.4,z-0.01,GREEN,DG);
+});
+for(var zi=0;zi<5;zi++){
+  var zz=ZONES3D[zi][0];
+  line(-4.9,-3,zz-0.5,4.9,-3,zz-0.5,GOLD,DG*0.8);
+  line(-4.9,3.4,zz-0.5,4.9,3.4,zz-0.5,GOLD,DG*0.5);
+}
+var bLN_P=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bLN_P); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lb),gl.STATIC_DRAW);
+var bLN_C=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,bLN_C); gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lc),gl.STATIC_DRAW);
+var LN_N=lb.length/3;
+
+/* --- لافتات المناطق --- */
+function signTex(ar,en){
+  var w=768,h=192,c=document.createElement('canvas');c.width=w;c.height=h;
+  var x=c.getContext('2d');
+  var g=x.createLinearGradient(0,0,w,0); g.addColorStop(0,'rgba(18,168,122,.9)'); g.addColorStop(1,'rgba(224,161,42,.85)');
+  x.strokeStyle=g;x.lineWidth=3;x.beginPath();
+  var r=22;x.moveTo(r,2);x.lineTo(w-r,2);x.quadraticCurveTo(w-2,2,w-2,r);x.lineTo(w-2,h-r);
+  x.quadraticCurveTo(w-2,h-2,w-r,h-2);x.lineTo(r,h-2);x.quadraticCurveTo(2,h-2,2,h-r);x.lineTo(2,r);x.quadraticCurveTo(2,2,r,2);x.closePath();x.stroke();
+  x.textAlign='center';x.direction='rtl';
+  x.fillStyle='#ffffff';x.shadowColor='rgba(18,168,122,.95)';x.shadowBlur=26;
+  x.font='700 76px "Segoe UI",Tahoma,sans-serif'; x.fillText(ar,w/2,96);
+  x.shadowBlur=0;x.fillStyle='#f0c460';x.font='600 24px Consolas,monospace';
+  x.fillText(en.toUpperCase().split('').join(' '),w/2,146);
+  var t=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,t);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  return t;
+}
+var signs=ZONES3D.map(function(z){return {z:z[0],tex:signTex(z[1],z[2])};});
+var SG_n=signs.length*6;
+var sgC=new Float32Array(SG_n*3), sgUV=new Float32Array(SG_n*2), sgWH=new Float32Array(SG_n*2);
+var SGW=7.0,SGH=1.75;
+signs.forEach(function(s,si){
+  var q=[[0,0],[1,0],[1,1],[0,0],[1,1],[0,1]];
+  for(var k=0;k<6;k++){
+    var o=(si*6+k);
+    sgC[o*3]=0; sgC[o*3+1]=1.7; sgC[o*3+2]=s.z;
+    sgUV[o*2]=q[k][0]; sgUV[o*2+1]=q[k][1];
+    sgWH[o*2]=SGW; sgWH[o*2+1]=SGH;
+  }
+});
+var bSG_C=gl.createBuffer(),bSG_UV=gl.createBuffer(),bSG_WH=gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,bSG_C); gl.bufferData(gl.ARRAY_BUFFER,sgC,gl.DYNAMIC_DRAW);
+gl.bindBuffer(gl.ARRAY_BUFFER,bSG_UV); gl.bufferData(gl.ARRAY_BUFFER,sgUV,gl.STATIC_DRAW);
+gl.bindBuffer(gl.ARRAY_BUFFER,bSG_WH); gl.bufferData(gl.ARRAY_BUFFER,sgWH,gl.STATIC_DRAW);
+
+/* --- الحالة والمصفوفات --- */
+var proj=new Float32Array(16),view=new Float32Array(16),viewTmp=new Float32Array(16);
+var mx=0,my=0,tmx=0,tmy=0,scrollP=0,tScroll=0,last=performance.now();
+function resize(){
+  var dpr=Math.min(devicePixelRatio||1,1.6),w=innerWidth,h=innerHeight;
+  cv.width=Math.floor(w*dpr); cv.height=Math.floor(h*dpr); cv.style.width=w+'px'; cv.style.height=h+'px';
+  gl.viewport(0,0,cv.width,cv.height);
+  persp(proj,Math.PI/3,w/h,0.1,1200);
+}
+addEventListener('resize',resize,{passive:true});
+if(!reduce){
+  addEventListener('mousemove',function(e){ tmx=(e.clientX/innerWidth-.5)*2; tmy=(e.clientY/innerHeight-.5)*2; },{passive:true});
+  addEventListener('scroll',function(){ var m=Math.max(1,document.body.scrollHeight-innerHeight); tScroll=Math.min(1,Math.max(0,scrollY/m)); },{passive:true});
+}
+resize();
+
+function draw(dt){
+  mx+=(tmx-mx)*.06; my+=(tmy-my)*.06;
+  scrollP+=(tScroll-scrollP)*.07;
+  var camZ=6-scrollP*(ZDIST-60);
+  var ex=mx*1.4,ey=1.0-my*0.6,ez=camZ;
+  lookAt(view,ex,ey,ez, mx*0.7,0.9+my*0.3, camZ-60, 0,1,0);
+  gl.clearColor(0.02,0.055,0.047,1); gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.enable(gl.BLEND);
+
+  /* الشبكة والغرف */
+  gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+  gl.useProgram(P_LN);
+  gl.uniformMatrix4fv(uLN.P,false,proj); gl.uniformMatrix4fv(uLN.V,false,view);
+  useAttrs([A_LN.p,A_LN.c]);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bLN_P); gl.vertexAttribPointer(A_LN.p,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bLN_C); gl.vertexAttribPointer(A_LN.c,3,gl.FLOAT,false,0,0);
+  gl.drawArrays(gl.LINES,0,LN_N);
+
+  /* الجزيئات */
+  for(var i=0;i<N;i++){
+    pPos[i*3+2]+=pVel[i]*dt*(1+ (tScroll-scrollP)*12);
+    if(pPos[i*3+2]>ez+3){ pPos[i*3+2]-=TOTAL; pPos[i*3]=(Math.random()*2-1)*7.5; }
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER,bPT_P); gl.bufferSubData(gl.ARRAY_BUFFER,0,pPos);
+  gl.useProgram(P_PT);
+  gl.uniformMatrix4fv(uPT.P,false,proj); gl.uniformMatrix4fv(uPT.V,false,view);
+  gl.uniform1f(uPT.K,Math.min(cv.height,1400)*0.055);
+  useAttrs([A_PT.p,A_PT.c,A_PT.s]);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bPT_P); gl.vertexAttribPointer(A_PT.p,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bPT_C); gl.vertexAttribPointer(A_PT.c,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bPT_S); gl.vertexAttribPointer(A_PT.s,1,gl.FLOAT,false,0,0);
+  gl.drawArrays(gl.POINTS,0,N);
+
+  /* اللافتات */
+  gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+  gl.useProgram(P_SG);
+  gl.uniformMatrix4fv(uSG.P,false,proj); gl.uniformMatrix4fv(uSG.V,false,view);
+  gl.activeTexture(gl.TEXTURE0); gl.uniform1i(uSG.T,0);
+  useAttrs([A_SG.c,A_SG.uv,A_SG.wh]);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bSG_C); gl.vertexAttribPointer(A_SG.c,3,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bSG_UV); gl.vertexAttribPointer(A_SG.uv,2,gl.FLOAT,false,0,0);
+  gl.bindBuffer(gl.ARRAY_BUFFER,bSG_WH); gl.vertexAttribPointer(A_SG.wh,2,gl.FLOAT,false,0,0);
+  signs.forEach(function(s,si){
+    gl.bindTexture(gl.TEXTURE_2D,s.tex);
+    gl.drawArrays(gl.TRIANGLES,si*6,6);
+  });
+}
+
+function loop(now){
+  var dt=Math.min((now-last)/1000,0.05); last=now;
+  if(!document.hidden) draw(dt);
+  requestAnimationFrame(loop);
+}
+if(reduce){ draw(0.016); }
+else { requestAnimationFrame(function(t){ last=t; loop(t); }); }
+})();
+</script>
+</body>
+</html>
