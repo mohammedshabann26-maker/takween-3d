@@ -763,18 +763,42 @@ stand(-3.2,-466); stand(3.2,-466);
     L(cx+Math.cos(t1)*r,cy+Math.sin(t1)*r,z,cx+Math.cos(t2)*r,cy+Math.sin(t2)*r,z,(a%8===0?C_GAME:C_APP),(a%8===0?.9:.4));
   }
 })();
-/* شعار تكوين ثلاثي الأبعاد (نجمة مبثوقة) عند المدخل للمقدمة */
-var LOGO_Z=0;
+/* شعار تكوين ثلاثي الأبعاد (يُرسم في المقدمة فقط، لا داخل الممر) */
+var lbl=[],lcl=[];
+function LL(x1,y1,z1,x2,y2,z2,c,f){f=(f===undefined?1:f);lbl.push(x1,y1,z1,x2,y2,z2);
+  lcl.push(c[0]*f,c[1]*f,c[2]*f,c[0]*f,c[1]*f,c[2]*f);}
 (function logo(){
   var R=3.1,r=1.32,pts=[];
   for(var k=0;k<10;k++){var ang=-Math.PI/2+k*Math.PI/5,rad=(k%2?r:R);pts.push([Math.cos(ang)*rad,Math.sin(ang)*rad]);}
   for(var k2=0;k2<10;k2++){
     var a=pts[k2],b=pts[(k2+1)%10];
     for(var d=0;d<3;d++){var zz=-d*0.55;
-      L(a[0],a[1]+0.2,zz,b[0],b[1]+0.2,zz,(d===0?C_APP:(d===1?C_SYS:C_GAME)),(d===0?1:.45));}
+      LL(a[0],a[1],zz,b[0],b[1],zz,(d===0?C_APP:(d===1?C_SYS:C_GAME)),(d===0?1:.42));}
   }
-  for(var k3=0;k3<10;k3++){var p=pts[k3];L(p[0],p[1]+0.2,0,p[0],p[1]+0.2,-1.1,C_SYS,.35);}
+  for(var k3=0;k3<10;k3++){var p=pts[k3];LL(p[0],p[1],0,p[0],p[1],-1.1,C_SYS,.3);}
+  var r2=4.35;
+  for(var a2=0;a2<48;a2++){
+    var t1=a2/48*Math.PI*2,t2=(a2+1)/48*Math.PI*2;
+    LL(Math.cos(t1)*r2,Math.sin(t1)*r2*0.42,-0.2,Math.cos(t2)*r2,Math.sin(t2)*r2*0.42,-0.2,(a2%6===0?C_GAME:C_SYS),(a2%6===0?.75:.28));
+  }
 })();
+var bLL=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bLL);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lbl),gl.STATIC_DRAW);
+var bLC2=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bLC2);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lcl),gl.STATIC_DRAW);
+var LOGO_N=lbl.length/3;
+
+/* حلقة جزيئات تدور حول الشعار (للمقدمة) */
+var RING=180;
+var rP=new Float32Array(RING*3),rC=new Float32Array(RING*3),rS=new Float32Array(RING),rA=new Float32Array(RING),rRad=new Float32Array(RING);
+for(var q=0;q<RING;q++){
+  rA[q]=Math.random()*Math.PI*2; rRad[q]=3.6+Math.random()*1.7;
+  rS[q]=1.2+Math.random()*2.4;
+  var cc=(q%5===0)?C_GAME:C_APP;
+  rC[q*3]=cc[0];rC[q*3+1]=cc[1];rC[q*3+2]=cc[2];
+}
+var bRP=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bRP);gl.bufferData(gl.ARRAY_BUFFER,rP,gl.DYNAMIC_DRAW);
+var bRC=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bRC);gl.bufferData(gl.ARRAY_BUFFER,rC,gl.STATIC_DRAW);
+var bRS=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bRS);gl.bufferData(gl.ARRAY_BUFFER,rS,gl.STATIC_DRAW);
+var ringT=0;
 var bLP=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bLP);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lb),gl.STATIC_DRAW);
 var bLC=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,bLC);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(lc),gl.STATIC_DRAW);
 var LN_N=lb.length/3;
@@ -895,11 +919,11 @@ function renderScene(dt){
   if(mode==='logo'||mode==='fly'){
     introT+=dt;
     var ang=introT*0.42, rad=8.6-Math.min(introT,3.4)*0.5;
-    var ex=Math.sin(ang)*rad, ez=Math.cos(ang)*rad+2.0, ey=0.8+Math.sin(introT*0.5)*0.6;
-    var tx=0,ty=0.2,tz=0;
+    var ex=Math.sin(ang)*rad, ez=Math.cos(ang)*rad+0.6, ey=0.5+Math.sin(introT*0.5)*0.5;
+    var tx=0,ty=0,tz=0;
     if(mode==='fly'){
       tMode+=dt; var k=Math.min(1,tMode/2.4), e=k*k*(3-2*k);
-      ex=ex*(1-e)+0*e; ey=ey*(1-e)+1.1*e; ez=ez*(1-e)+5.4*e;
+      ex=ex*(1-e); ey=ey*(1-e)+1.15*e; ez=ez*(1-e)+5.4*e;
       tx=0; ty=0.2*(1-e)+1.0*e; tz=0*(1-e)+(-70)*e;
       if(k>=1){mode='world';$('#cine').classList.add('done');lockScroll(false);}
     }
@@ -909,35 +933,59 @@ function renderScene(dt){
     lookAt(view,ex2,ey2,ez2,mx*0.8,1.0+my*0.35,camZ-64,0,1,0);
   }
 
-  gl.clearColor(0.012,0.045,0.036,1);gl.clear(gl.COLOR_BUFFER_BIT);
+  var intro=(mode==='logo'||mode==='fly');
+  gl.clearColor(intro?0.006:0.012, intro?0.024:0.045, intro?0.019:0.036, 1);gl.clear(gl.COLOR_BUFFER_BIT);
   gl.enable(gl.BLEND);
 
-  /* خطوط */
+  /* خطوط: في المقدمة الشعار فقط، وفي العالم المبنى فقط */
   gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
   gl.useProgram(P_LN);
   gl.uniformMatrix4fv(uLN.P,false,proj);gl.uniformMatrix4fv(uLN.V,false,view);
   useA([A_LN.p,A_LN.c]);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bLP);gl.vertexAttribPointer(A_LN.p,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bLC);gl.vertexAttribPointer(A_LN.c,3,gl.FLOAT,false,0,0);
-  gl.drawArrays(gl.LINES,0,LN_N);
+  if(intro){
+    gl.bindBuffer(gl.ARRAY_BUFFER,bLL);gl.vertexAttribPointer(A_LN.p,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bLC2);gl.vertexAttribPointer(A_LN.c,3,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.LINES,0,LOGO_N);
+  } else {
+    gl.bindBuffer(gl.ARRAY_BUFFER,bLP);gl.vertexAttribPointer(A_LN.p,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bLC);gl.vertexAttribPointer(A_LN.c,3,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.LINES,0,LN_N);
+  }
 
   /* جزيئات */
-  var cz=(mode==='world')?camZ:6;
-  for(var i2=0;i2<N;i2++){
-    pP[i2*3+2]+=pV[i2]*dt*(mode==='world'?1:0.35);
-    if(pP[i2*3+2]>cz+4){pP[i2*3+2]-=TOTAL;pP[i2*3]=(Math.random()*2-1)*8;}
-  }
-  gl.bindBuffer(gl.ARRAY_BUFFER,bPP);gl.bufferSubData(gl.ARRAY_BUFFER,0,pP);
   gl.useProgram(P_PT);
   gl.uniformMatrix4fv(uPT.P,false,proj);gl.uniformMatrix4fv(uPT.V,false,view);
   gl.uniform1f(uPT.K,Math.min(cv.height,1400)*0.055);
-  useA([A_PT.p,A_PT.c,A_PT.s]);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bPP);gl.vertexAttribPointer(A_PT.p,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bPC);gl.vertexAttribPointer(A_PT.c,3,gl.FLOAT,false,0,0);
-  gl.bindBuffer(gl.ARRAY_BUFFER,bPS);gl.vertexAttribPointer(A_PT.s,1,gl.FLOAT,false,0,0);
-  gl.drawArrays(gl.POINTS,0,N);
+  if(intro){
+    ringT+=dt*0.42;
+    for(var q2=0;q2<RING;q2++){
+      var a3=rA[q2]+ringT;
+      rP[q2*3]=Math.cos(a3)*rRad[q2];
+      rP[q2*3+1]=Math.sin(a3)*rRad[q2]*0.55;
+      rP[q2*3+2]=Math.sin(a3*1.6)*1.4;
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER,bRP);gl.bufferSubData(gl.ARRAY_BUFFER,0,rP);
+    useA([A_PT.p,A_PT.c,A_PT.s]);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bRP);gl.vertexAttribPointer(A_PT.p,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bRC);gl.vertexAttribPointer(A_PT.c,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bRS);gl.vertexAttribPointer(A_PT.s,1,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.POINTS,0,RING);
+  } else {
+    var cz=(mode==='world')?camZ:6;
+    for(var i2=0;i2<N;i2++){
+      pP[i2*3+2]+=pV[i2]*dt;
+      if(pP[i2*3+2]>cz+4){pP[i2*3+2]-=TOTAL;pP[i2*3]=(Math.random()*2-1)*8;}
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER,bPP);gl.bufferSubData(gl.ARRAY_BUFFER,0,pP);
+    useA([A_PT.p,A_PT.c,A_PT.s]);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bPP);gl.vertexAttribPointer(A_PT.p,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bPC);gl.vertexAttribPointer(A_PT.c,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,bPS);gl.vertexAttribPointer(A_PT.s,1,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.POINTS,0,N);
+  }
 
-  /* لافتات */
+  /* لافتات (في العالم فقط) */
+  if(!intro){
   gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   gl.useProgram(P_SG);
   gl.uniformMatrix4fv(uSG.P,false,proj);gl.uniformMatrix4fv(uSG.V,false,view);
@@ -947,6 +995,7 @@ function renderScene(dt){
   gl.bindBuffer(gl.ARRAY_BUFFER,bSU);gl.vertexAttribPointer(A_SG.uv,2,gl.FLOAT,false,0,0);
   gl.bindBuffer(gl.ARRAY_BUFFER,bSW);gl.vertexAttribPointer(A_SG.wh,2,gl.FLOAT,false,0,0);
   SIGNS.forEach(function(s,si){gl.bindTexture(gl.TEXTURE_2D,s.tex);gl.drawArrays(gl.TRIANGLES,si*6,6);});
+  }
 
   sizeDevices();
 }
